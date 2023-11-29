@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap">
+
+  <meta charset="utf-8" />
+  <title>UniVerse</title>
+
+  <style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Times New Roman', serif;
+    }
+
+    body {
+      background-image: url('../static/bg.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .navbar {
+      background-color: black;
+      color: white;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5px;
+    }
+
+    .nav-link {
+      color: white;
+      padding: 0 5px;
+    }
+
+    .nav-link:hover {
+      text-decoration: none;
+      color: #ff9900;
+    }
+
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .search-bar {
+      display: flex;
+      flex-grow: 1;
+      margin: 0 20px;
+      /* Space on left and right of search bar */
+    }
+
+    .search-bar input[type="text"] {
+      flex-grow: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 4px 0 0 4px;
+      /* Rounded corners on the left side */
+    }
+
+    .search-bar button {
+      padding: 10px;
+      background-color: #febd69;
+      border: none;
+      border-radius: 0 4px 4px 0;
+      /* Rounded corners on the right side */
+    }
+
+    .navbar-toggler {
+      border-color: rgba(255, 255, 255, 0.1);
+      /* Adjust toggler icon color */
+    }
+
+    @media (max-width: 768px) {
+      .search-bar {
+        margin-top: 10px;
+        /* Spacing for the search bar in mobile view */
+      }
+    }
+
+    .btn-custom {
+      background-color: black;
+      color: whitesmoke;
+      border: none;
+      transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    }
+
+    .btn-custom:hover {
+      color: #ff9900;
+    }
+
+    .custom-container {
+      text-align: justify;
+      background-color: #f5f5dc;
+      padding: 20px;
+    }
+
+    .custom-heading {
+      color: yellow; text-shadow: 0 0 10px yellow;
+      text-align: center;
+      background-color: #163c71;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg fixed-top">
+    <a class="navbar-brand" href="{{ url_for('core.index') }}">
+      <img src="{{ url_for('static', filename='logo1.png') }}" style="height: 1em; width: 4em;" alt="Logo" />
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+      aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarText">
+      <!-- Left List -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('core.index') }}"><i class="fas fa-home"></i> Home <span
+              class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('core.info') }}"><i class="fas fa-info-circle"></i> About Us</a>
+        </li>
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.account') }}"><i class="fas fa-user-edit"></i> Edit
+            Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('blog_posts.create_post') }}"><i class="fas fa-plus-circle"></i> Create
+            Post</a>
+        </li>
+        {% endif %}
+      </ul>
+
+      {% if current_user.is_authenticated %}
+      <!-- Centered List -->
+      <ul class="navbar-nav mx-auto">
+        <li class="nav-item">
+          <span class="nav-link" style="color: #ff9900;">Welcome
+            {{ current_user.username }}</span>
+        </li>
+      </ul>
+      {% endif %}
+      <!-- Right List -->
+      <ul class="navbar-nav ml-auto">
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('blog_posts.download_posts') }}"><i class="fas fa-download"></i> Download
+            Blogs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.logout') }}"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.register') }}"><i class="fas fa-user-plus"></i> Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('users.login') }}"><i class="fas fa-sign-in-alt"></i> Sign In</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  <br /><br /><br />
+  <div class="container">{% block content %} {% endblock %}</div>
+
+  <br /><br />
+  <footer class="text-muted py-2 fixed-bottom" style="background-color: black; color: white; text-align: center;">
+    <div class="container">
+      <p class="mb-1" style="color: yellow; text-shadow: 0 0 10px yellow;">Made by Peeyush Kumar Jaiswal (ASU ID: 1225445884)</p>
+    </div>
+  </footer>
+
+</body>
+
+</html>
